@@ -1,0 +1,16 @@
+/* 1️⃣ Import fonts first */
+/* @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap"); */
+@import "tailwindcss";
+
+/* 2️⃣ Tailwind directives */
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+/* 3️⃣ Optional custom classes */
+/* .font-inter {
+  font-family: "Inter", sans-serif;
+}
+.font-poppins {
+  font-family: "Poppins", sans-serif;
+} */
