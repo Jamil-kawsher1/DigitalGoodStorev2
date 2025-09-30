@@ -2,8 +2,6 @@ import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
-const API_BASE = "http://localhost:4002";
-
 export default function RoleRoute({ children, allowed = [] }) {
   const { user, loading } = useAuth();
   const location = useLocation();

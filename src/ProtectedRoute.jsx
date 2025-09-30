@@ -1,6 +1,4 @@
 import React from "react";
-
-const API_BASE = "http://localhost:4002";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 

@@ -2,10 +2,11 @@ import { defineConfig } from "tailwindcss";
 
 export default defineConfig({
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}", // your React files
-    "./components/**/*.{js,jsx}",
-    "./pages/**/*.{js,jsx}",
+    "./index.html",
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
-  theme: { extend: {} },
+  theme: {
+    extend: {},
+  },
   plugins: [],
 });

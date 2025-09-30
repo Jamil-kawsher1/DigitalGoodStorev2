@@ -315,10 +315,12 @@ export function ProductProvider({ children }) {
     }
   };
 
-  const placeOrder = (product) => {
+  const placeOrder = async (product) => {
     if (!user) {
       return null;
     }
+    
+    // Create order object
     const order = {
       id: Date.now(),
       userId: user.id,
@@ -330,22 +332,74 @@ export function ProductProvider({ children }) {
       paymentInfo: null,
       createdAt: new Date().toISOString(),
     };
-    setOrders([...orders, order]);
-    return order;
+    
+    try {
+      // Save to database first - API expects only productId
+      console.log("Creating order with productId:", product.id);
+      const dbOrder = await fetchJSON("/orders", {
+        method: "POST",
+        body: {
+          productId: parseInt(product.id), // Ensure productId is a number
+        },
+      });
+      
+      // Update order with database ID and include full order data
+      const finalOrder = { 
+        ...order, 
+        id: dbOrder.id,
+        status: "pending", // API sets initial status
+      };
+      
+      // Save to localStorage as well for real-time detection
+      setOrders([...orders, finalOrder]);
+      
+      return finalOrder;
+    } catch (err) {
+      console.error("Error saving order to database:", err);
+      // Fallback to localStorage only if database fails
+      setOrders([...orders, order]);
+      return order;
+    }
   };
 
-  const addManualPayment = ({ method, trxId, sender }) => {
+  const addManualPayment = async ({ method, trxId, sender }) => {
     if (!user) return;
     const lastOrder = orders.find(
       (o) => o.userId === user.id && o.status === "Pending"
     );
     if (!lastOrder) return;
-    const updated = {
-      ...lastOrder,
-      paymentInfo: { method, trxId, sender },
-      status: "AwaitingConfirmation",
-    };
-    setOrders(orders.map((o) => (o.id === lastOrder.id ? updated : o)));
+    
+    try {
+      // Send payment info to database using the payment endpoint
+      const paymentData = {
+        method: method,
+        trxId: trxId,
+        sender: sender,
+      };
+      
+      await fetchJSON(`/orders/${lastOrder.id}/payment`, {
+        method: "POST",
+        body: paymentData,
+      });
+      
+      // Update localStorage with the new status
+      const updated = {
+        ...lastOrder,
+        paymentInfo: { method, trxId, sender },
+        status: "awaiting_confirmation", // Match backend status
+      };
+      setOrders(orders.map((o) => (o.id === lastOrder.id ? updated : o)));
+      
+    } catch (err) {
+      console.error("Error saving payment to database:", err);
+      // Fallback to localStorage only if database fails
+      const updated = {
+        ...lastOrder,
+        paymentInfo: { method, trxId, sender },
+        status: "AwaitingConfirmation",
+      };
+      setOrders(orders.map((o) => (o.id === lastOrder.id ? updated : o)));
+    }
   };
 
   const addKeysToOrder = (orderId, keys) => {

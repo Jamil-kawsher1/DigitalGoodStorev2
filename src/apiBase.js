@@ -78,6 +78,24 @@ export const authAPI = {
     return data;
   },
 
+  forgotPassword: async (email) => {
+    const data = await fetchJSON("/auth/forgot-password", {
+      method: "POST",
+      body: { email },
+    });
+
+    return data;
+  },
+
+  resetPassword: async (token, password) => {
+    const data = await fetchJSON("/auth/reset-password", {
+      method: "POST",
+      body: { token, newPassword: password },
+    });
+
+    return data;
+  },
+
   checkAuth: async () => {
     const token = localStorage.getItem(TOKEN_KEY);
     const userData = localStorage.getItem(USER_DATA_KEY);
