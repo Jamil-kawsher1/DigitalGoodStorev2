@@ -1,5 +1,4 @@
 export const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://easybuybd.space";
-console.log("API_BASE is set to:", API_BASE);
 const TOKEN_KEY = "app_token";
 const USER_DATA_KEY = "user_data";
 
