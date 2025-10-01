@@ -247,7 +247,7 @@ export function ProductProvider({ children }) {
       // If you want to save to API first
       const newProduct = await fetchJSON("/products", {
         method: "POST",
-        body: JSON.stringify(product),
+        body: product,
       });
 
       // Then update local state
@@ -267,7 +267,7 @@ export function ProductProvider({ children }) {
       // Update in API first
       const updatedProduct = await fetchJSON(`/products/${id}`, {
         method: "PUT",
-        body: JSON.stringify(updated),
+        body: updated,
       });
 
       // Then update local state
